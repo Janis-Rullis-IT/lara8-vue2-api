@@ -56,24 +56,20 @@ export default {
     showSuccess: function(success = "Saved!") {
       this.alerts.success = this.getTranslatedMessage(success);
       this.loading = false;
-    },
+     },
     showError: function(errors = ["Sorry, but there's a problem."]) {
       for (let i = 0; i < errors.length; i++) {
-        this.alerts.errors.push(this.getTranslatedMessage(error));
+        this.alerts.errors.push(this.getTranslatedMessage(errors[i]));
         this.loading = false;
       }
     },
     // TODO: Plug translations.
     getTranslatedMessage: function(messageKey) {
-      return this.doesTranslationExist(messageKey)
-        ? window.translations[messageKey]
-        : messageKey;
+      return this.doesTranslationExist(messageKey) ? window.translations[messageKey] : messageKey;
     },
     doesTranslationExist(messageKey) {
       return (
-        messageKey &&
-        typeof window.translations[messageKey] != "undefined" &&
-        window.translations[messageKey] != null
+        messageKey && typeof window.translations != "undefined" &&  typeof window.translations[messageKey] != "undefined" && window.translations[messageKey] != null
       );
     }
   }

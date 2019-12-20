@@ -89,7 +89,7 @@ export default {
       dragging: false,
       enabled: true,
       title: "",
-      price: null
+      price: ""
     };
   },
   created() {
@@ -123,6 +123,14 @@ export default {
     addNew() {
       this.clearAlerts();      
       this.loading = true;
+  
+      this.title = this.title.trim();
+      this.price = this.price;
+      
+      if(this.title.length < 1 || this.price.length < 1){
+        this.showError(['Sorry, no empty values.']);
+        return false;
+      }      
 
       this.$http.post("products/" + this.product.hash + "/ingredients", {
           title: this.title,

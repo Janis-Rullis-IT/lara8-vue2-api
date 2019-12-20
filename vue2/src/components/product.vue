@@ -130,7 +130,7 @@ export default {
         }).then(
           function onSuccess(response) {
             this.loading = false;
-            this.ingredients.push(response.data);
+            this.ingredients.push(response.data.data);
             // TODO: Put the ingredient in the ingredients array,            
           },
           function onFail(response) {

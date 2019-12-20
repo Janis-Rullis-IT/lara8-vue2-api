@@ -53,7 +53,7 @@
                   :key="ingredient.hash"
                 >
                   {{ ingredient.title }}
-                  <button type="button" @click="remove(ingredient.hash)">Delete</button>
+                  <button type="button" @click="remove(ingredient)">Delete</button>
                 </div>
               </draggable>
               
@@ -131,7 +131,6 @@ export default {
           function onSuccess(response) {
             this.loading = false;
             this.ingredients.push(response.data.data);
-            // TODO: Put the ingredient in the ingredients array,            
           },
           function onFail(response) {
             this.loading = false;
@@ -139,14 +138,14 @@ export default {
           }
         );
     },
-    remove(hash) {
+    remove(item) {
       if (confirm("Are you sure?")) {
         this.clearAlerts();        
 
-        this.$http.delete("products/" + this.product.hash + "/ingredients/" + hash).then(
+        this.$http.delete("products/" + this.product.hash + "/ingredients/" + item.hash).then(
           function onSuccess(response) {
             this.loading = false;
-            // TODO: Remove the ingredient in the ingredients array,            
+            this.ingredients.splice(this.ingredients.indexOf(item), 1);
           },
           function onFail(response) {
             this.loading = false;

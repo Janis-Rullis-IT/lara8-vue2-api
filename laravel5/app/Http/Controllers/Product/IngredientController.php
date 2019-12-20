@@ -24,7 +24,7 @@ class IngredientController extends Controller
 		if ($status !== true) {
 			return response()->json(['errors' => [$status]], 400);
 		}
-		$foundByHash = Product::findByHash($zproductHash);
+		$foundByHash = Product::findByHash($productHash);
 		if (empty($foundByHash)) {
 			return response()->json(['errors' => ['ingredient.product_does_not_exist']], 400);
 		}

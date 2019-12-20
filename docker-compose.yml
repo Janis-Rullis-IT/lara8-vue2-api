@@ -1,0 +1,72 @@
+version: '3.6'
+services:
+    ruu-vue2:
+        container_name: ruu-vue2
+        build:
+            context: ./vue2
+            dockerfile: Dockerfile
+        environment:
+            VIRTUAL_HOST: ruu.local
+        volumes:
+            - './vue2:/var/www:rw'
+        networks:
+            ruu-net:
+                ipv4_address: 172.60.2.10
+    ruu-laravel5:
+        container_name: ruu-laravel5
+        build:
+            context: ./laravel5
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        depends_on:
+            - ruu-pma            
+        environment:            
+            VIRTUAL_HOST: api.ruu.local
+        volumes:
+            - './laravel5:/var/www:rw'
+        networks:
+            ruu-net:
+                ipv4_address: 172.60.2.11
+    ruu-mysql:
+        container_name: ruu-mysql
+        image: 'mariadb:latest'
+        restart: unless-stopped
+        ports:
+            - '3306:3306'
+        volumes:
+            - type: bind
+              source: ./db/mysql
+              target: /var/lib/mysql
+        environment:
+            TZ: Europe/Riga
+            LANG: en_US.UTF-8
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            INIT_TOKUDB: 1
+            INIT_ROCKSDB: 0
+        networks:
+            ruu-net:
+                ipv4_address: 172.60.2.13
+        command: '--sql-mode= --server-id=1 --log-bin=mysql-bin --expire_logs_days=3'
+    ruu-pma:
+        container_name: ruu-pma
+        image: 'phpmyadmin/phpmyadmin'
+        restart: always
+        depends_on:
+        - ruu-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            PMA_HOST: ruu-mysql  
+            PMA_PORT: 3306
+        networks:
+            ruu-net:
+                ipv4_address: 172.60.2.14
+networks:
+    ruu-net:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.60.0.0/16

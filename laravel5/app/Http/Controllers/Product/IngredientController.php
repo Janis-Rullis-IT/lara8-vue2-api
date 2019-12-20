@@ -58,6 +58,7 @@ class IngredientController extends Controller
 		if (empty($data['hash'])) {
 			return response()->json(['errors' => $data], 400);
 		} else {
+			$data['product_price'] = \App\Models\Product::getPrice($foundByHash->id)['price'];
 			return response()->json(['data' => $data, 'success' => true], 200);
 		}
 	}
@@ -80,15 +81,18 @@ class IngredientController extends Controller
 		if ($status !== true) {
 			return response()->json(['errors' => [$status]], 400);
 		}
-		$foundByHash = Ingredient::findByHash($ingredientHash, ['ingredient.id']);
+		$foundByHash = Ingredient::findByHash($ingredientHash, ['ingredient.id', 'ingredient.product_id']);
 		if (empty($foundByHash)) {
 			return response()->json(['errors' => ['ingredient.does_not_exist']], 400);
 		} else {
-
+			$productId = $foundByHash->product_id;
 			$foundByHash->delete();
+			
+			// Update product's total price.
+			\App\Models\Product::updatePrice($productId);
 
-			// TODO: Return the changed total price.
-			return response()->json(['data' => [], 'success' => true], 200);
+			// Return the changed total price.
+			return response()->json(['data' => ["product_price" => \App\Models\Product::getPrice($productId)['price']], 'success' => true], 200);
 		}
 	}
 

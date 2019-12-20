@@ -6,7 +6,11 @@
           <div class="alert success">{{alerts.success}}</div>
         </div>
       </div>
-       <div v-if=alerts.errors class="row"><div class="col"><div v-for="(error, index) in alerts.errors" :key="index" class="alert errorr">{{error}}</div></div></div>
+      <div v-if="alerts.errors" class="row">
+        <div class="col">
+          <div v-for="(error, index) in alerts.errors" :key="index" class="alert errorr">{{error}}</div>
+        </div>
+      </div>
     </div>
 
     <div class="row content product">
@@ -37,8 +41,7 @@
             />
             <button type="button" @click="addNew()">Add</button>
 
-            <div class="col-sm-12 list-groupe">              
-
+            <div class="col-sm-12 list-groupe">
               <draggable
                 :list="ingredients"
                 :disabled="!enabled"
@@ -52,18 +55,15 @@
                   v-for="ingredient in ingredients"
                   :key="ingredient.hash"
                 >
-                  {{ ingredient.title }}
+                  {{ ingredient.title }} {{ intToDec(ingredient.price) }}
                   <button type="button" @click="remove(ingredient)">Delete</button>
                 </div>
               </draggable>
-              
             </div>
           </div>
           <div class="row text">
             <div class="col-sm-12">
-              Total price: total collected from API - maybe they don't have the ingredient or a tax is added or a discount.
-              Also the logic should be in one common place - in this specifc case MySQL. Various APIs can use the same data and get the same result.
-              But if needed the price logic can be updated after tbe data/price has been collected like here or in the API that called the DB.
+              <strong>Total price: {{product.price}}</strong>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       loading: true,
-      alerts: { success: "", errors: []},
+      alerts: { success: "", errors: [] },
       slug: this.$route.params.slug,
       type: this.$route.params.type,
       product: {},
@@ -100,9 +100,11 @@ export default {
       this.clearAlerts();
       this.loading = true;
 
-      this.$http.get("products/" + this.type + '/' + this.slug).then(
+      this.$http.get("products/" + this.type + "/" + this.slug).then(
         function(response) {
           this.product = response.data.data;
+          // TODO: Later return dec_ field for this from API.
+          this.product.price = this.intToDec(this.product.price);
 
           this.$http.get("products/" + this.product.hash + "/ingredients").then(
             function(response) {
@@ -113,7 +115,7 @@ export default {
               this.loading = false;
               this.showError(response.data.errors);
             }
-          );          
+          );
         },
         function() {
           this.showError(response.data.errors);
@@ -121,24 +123,31 @@ export default {
       );
     },
     addNew() {
-      this.clearAlerts();      
+      this.clearAlerts();
       this.loading = true;
-  
+
       this.title = this.title.trim();
       this.price = this.price;
-      
-      if(this.title.length < 1 || this.price.length < 1){
-        this.showError(['Sorry, no empty values.']);
-        return false;
-      }      
 
-      this.$http.post("products/" + this.product.hash + "/ingredients", {
+      if (this.title.length < 1 || this.price.length < 1) {
+        this.showError(["Sorry, no empty values."]);
+        return false;
+      }
+
+      this.$http
+        .post("products/" + this.product.hash + "/ingredients", {
           title: this.title,
-          price: this.price
-        }).then(
+          price: this.price * 100
+        })
+        .then(
           function onSuccess(response) {
             this.loading = false;
             this.ingredients.push(response.data.data);
+
+            // Total price: total collected from API - maybe they don't have the ingredient or a tax is added or a discount.
+            // Also the logic should be in one common place - in this specifc case MySQL. Various APIs can use the same data and get the same result.
+            // But if needed the price logic can be updated after tbe data/price has been collected like here or in the API that called the DB.
+            this.product.price = this.intToDec(response.data.data.product_price);
           },
           function onFail(response) {
             this.loading = false;
@@ -148,22 +157,24 @@ export default {
     },
     remove(item) {
       if (confirm("Are you sure?")) {
-        this.clearAlerts();        
+        this.clearAlerts();
 
-        this.$http.delete("products/" + this.product.hash + "/ingredients/" + item.hash).then(
-          function onSuccess(response) {
-            this.loading = false;
-            this.ingredients.splice(this.ingredients.indexOf(item), 1);
-          },
-          function onFail(response) {
-            this.loading = false;
-            this.showError(response.data.errors);
-          }
-        );
+        this.$http
+          .delete("products/" + this.product.hash + "/ingredients/" + item.hash)
+          .then(
+            function onSuccess(response) {
+              this.loading = false;   
+              this.ingredients.splice(this.ingredients.indexOf(item), 1);
+              this.product.price = this.intToDec(response.data.data.product_price);
+            },
+            function onFail(response) {
+              this.loading = false;
+              this.showError(response.data.errors);
+            }
+          );
       }
     },
     pushSequence: function() {
-      
       var sequence = [];
       var index = 0;
       var icnt = this.ingredients.length;
@@ -176,9 +187,16 @@ export default {
         }
 
         this.$http
-          .put("products/" + this.product.hash + "/ingredients/sequence", sequence)
+          .put(
+            "products/" + this.product.hash + "/ingredients/sequence",
+            sequence
+          )
           .then(response => {}, response => {});
       }
+    },
+    intToDec(val){
+      console.log(val, val / 100)
+      return parseFloat(val / 100).toFixed(2);
     },
     // TODO: Move to common lib.
     clearAlerts: function() {
@@ -196,11 +214,16 @@ export default {
     },
     // TODO: Plug translations.
     getTranslatedMessage: function(messageKey) {
-      return this.doesTranslationExist(messageKey) ? window.translations[messageKey] : messageKey;
+      return this.doesTranslationExist(messageKey)
+        ? window.translations[messageKey]
+        : messageKey;
     },
     doesTranslationExist(messageKey) {
       return (
-        messageKey && typeof window.translations != "undefined" &&  typeof window.translations[messageKey] != "undefined" && window.translations[messageKey] != null
+        messageKey &&
+        typeof window.translations != "undefined" &&
+        typeof window.translations[messageKey] != "undefined" &&
+        window.translations[messageKey] != null
       );
     }
   }

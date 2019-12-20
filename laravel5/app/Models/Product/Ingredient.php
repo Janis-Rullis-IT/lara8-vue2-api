@@ -86,7 +86,7 @@ class Ingredient extends Model
 	 * @param string $str
 	 * @return string
 	 * 
-	 * \App\Models\Product::getFormattedStr('<iframe>  Cheese Pizza</iframe>');
+	 * \App\Models\Product\Ingredient::getFormattedStr('<iframe>  Cheese Pizza</iframe>');
 	 * > Cheese pizza
 	 */
 	public static function getFormattedStr($str)
@@ -100,10 +100,10 @@ class Ingredient extends Model
 	 * @param string $title
 	 * @return boolean
 	 * 
-	 * \App\Models\Product::isValidTitle('Cheese Pizza');
+	 * \App\Models\Product\Ingredient::isValidTitle('Cheese Pizza');
 	 * > true
 	 * 
-	 * \App\Models\Product::isValidTitle('');
+	 * \App\Models\Product\Ingredient::isValidTitle('');
 	 * > false
 	 */
 	public static function isValidTitle($title)
@@ -117,10 +117,10 @@ class Ingredient extends Model
 	 * @param string $str
 	 * @return boolean
 	 * 
-	 * \App\Models\Product::isValidStr('Cheese Pizza');
+	 * \App\Models\Product\Ingredient::isValidStr('Cheese Pizza');
 	 * > true
 	 * 
-	 * \App\Models\Product::isValidStr('');
+	 * \App\Models\Product\Ingredient::isValidStr('');
 	 * > false
 	 */
 	public static function isValidStr($str)
@@ -134,13 +134,13 @@ class Ingredient extends Model
 	 * @param string $hash
 	 * @return bool
 	 * 
-	 * \App\Models\Product::isValidHash('a9993e364706816aba3e25717850c26c9cd0d89d');
+	 * \App\Models\Product\Ingredient::isValidHash('a9993e364706816aba3e25717850c26c9cd0d89d');
 	 * > true
 	 * 
-	 * \App\Models\Product::isValidHash('a9993e364706816aba3e25717850c26c9cd0d89d-too-long');
+	 * \App\Models\Product\Ingredient::isValidHash('a9993e364706816aba3e25717850c26c9cd0d89d-too-long');
 	 * > false
 	 * 
-	 * \App\Models\Product::isValidHash('too-short');
+	 * \App\Models\Product\Ingredient::isValidHash('too-short');
 	 * > false
 	 */
 	public static function isValidHash(string $hash)
@@ -192,14 +192,13 @@ class Ingredient extends Model
 	{
 		return \App\Models\Product::where('id', $productId)->count() > 0;
 	}
-	
 
 	/**
 	 * Generate a unique SHA1 hash (40 chars) from the passed string.   * 
 	 * @param string $str
 	 * @return string $hash - SHA1 hash (40 chars)
 	 * 
-	 * \App\Models\Product::getHash('abc');
+	 * \App\Models\Product\Ingredient::getHash('abc');
 	 * > a9993e364706816aba3e25717850c26c9cd0d89d
 	 */
 	public static function getHash(string $str)
@@ -212,7 +211,7 @@ class Ingredient extends Model
 	 * @param type $str
 	 * @return string
 	 * 
-	 * \App\Models\Product::getSlug('  Cheese Pizza	');
+	 * \App\Models\Product\Ingredient::getSlug('  Cheese Pizza	');
 	 * > 'cheese-pizza'
 	 */
 	public static function getSlug(string $str)
@@ -236,10 +235,29 @@ class Ingredient extends Model
 		$this->slug = static::getSlug($title);
 
 		if ($this->save()) {
+
+			// Update product's total price.
+			\App\Models\Product::updatePrice($productId);
 			
-			// TODO: Update product's total price.			
 			return static::findByHash($this->hash);
 		}
 		return false;
+	}
+
+	/**
+	 * Keep items always ordered correctly. This a cure for parallel requests and deleted items.
+	 * @param int $productId
+	 * @return boolean
+	 */
+	public static function updateOrderNumbers(int $productId)
+	{
+		return \DB::statement("
+			UPDATE `ingredient`
+			SET `seq` = (@i := @i+1)
+			WHERE `product_id` = ?
+			AND `deleted_at` IS NULL			
+			ORDER BY `seq` ASC
+			(SELECT @i := 1)
+        ", [$productId]);
 	}
 }

@@ -51,7 +51,7 @@ class Product extends Model
 	public static function findByHash($hash, $type = 'other', $fields = ['product.id', 'product.title', 'product.slug', 'product.hash', 'product.price', 'product.type'], $toArray = false)
 	{
 		$data = static::getWhereHash($hash, $type, $fields)->first();
-		return $toArray && !empty($data) ? $data->toArray() : $data;	
+		return $toArray && !empty($data) ? $data->toArray() : $data;
 	}
 
 	/**
@@ -75,7 +75,7 @@ class Product extends Model
 	public static function findBySlug($slug, $type = 'other', $fields = ['product.id', 'product.title', 'product.slug', 'product.hash', 'product.price', 'product.type'], $toArray = false)
 	{
 		$data = static::getWhereSlug($slug, $type, $fields)->first();
-		return $toArray && !empty($data) ? $data->toArray() : $data;		
+		return $toArray && !empty($data) ? $data->toArray() : $data;
 	}
 
 	/**
@@ -298,5 +298,26 @@ class Product extends Model
 			return static::findByHash($this->hash, $this->type);
 		}
 		return false;
+	}
+
+	/**
+	  Total price: total collected from API - maybe they don't have the ingredient or a tax is added or a discount.
+	  Also the logic should be in one common place - in this specifc case MySQL. Various APIs can use the same data and get the same result.
+	  But if needed the price logic can be updated after tbe data/price has been collected like here or in the API that called the DB.
+	 * @param int $productId
+	 * @return boolean
+	 */
+	public static function updatePrice(int $productId)
+	{
+		return \DB::statement("
+			UPDATE `product`
+			SET `price` = (SELECT SUM(price) FROM ingredient WHERE `product_id` = ? AND deleted_at IS NULL)
+			WHERE `id` = ?
+        ", [$productId, $productId]);
+	}
+
+	public static function getPrice(int $productId)
+	{
+		return static::	select(['price'])->where('id', $productId)->first();
 	}
 }

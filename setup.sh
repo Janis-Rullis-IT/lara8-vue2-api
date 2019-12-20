@@ -50,7 +50,7 @@ function setLaravelEnv(){
 
 	echo "Configuring...";	
 	docker-compose up ruu-laravel5  > /dev/null 2>&1 &
-	sleep 40s
+	sleep 60s
 
 	echo "Generating the 'APP_KEY'...";
 	docker exec -i ruu-laravel5 bash -c "php artisan key:generate"

@@ -182,7 +182,7 @@ export default {
       if (icnt > 0) {
         var i;
 
-        for (i = 1; i < icnt + 1; i++) {
+        for (i = 0; i < icnt; i++) {
           sequence.push(this.ingredients[i].hash);
         }
 
@@ -195,7 +195,6 @@ export default {
       }
     },
     intToDec(val){
-      console.log(val, val / 100)
       return parseFloat(val / 100).toFixed(2);
     },
     // TODO: Move to common lib.

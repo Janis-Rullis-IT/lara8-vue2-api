@@ -25,7 +25,7 @@ class Ingredient extends Model
 	 */
 	public static function getWhere($fields = ['ingredient.id', 'ingredient.title', 'ingredient.hash', 'ingredient.price'])
 	{
-		return static::select($fields)->orderBy('seq', 'DESC');
+		return static::select($fields)->orderBy('seq', 'ASC');
 	}
 
 	/**
@@ -233,12 +233,13 @@ class Ingredient extends Model
 		$this->price = $price;
 		$this->hash = $hash;
 		$this->slug = static::getSlug($title);
+		$this->seq = static::getLastSeq($productId) + 1;
 
 		if ($this->save()) {
 
 			// Update product's total price.
 			\App\Models\Product::updatePrice($productId);
-			
+
 			return static::findByHash($this->hash);
 		}
 		return false;
@@ -249,7 +250,7 @@ class Ingredient extends Model
 	 * @param int $productId
 	 * @return boolean
 	 */
-	public static function updateOrderNumbers(int $productId)
+	public static function updateSeq(int $productId)
 	{
 		return \DB::statement("
 			UPDATE `ingredient`
@@ -259,5 +260,36 @@ class Ingredient extends Model
 			ORDER BY `seq` ASC
 			(SELECT @i := 1)
         ", [$productId]);
+	}
+
+	/**
+	 * @param int $productId
+	 * @param array $hashes
+	 * @return boolean|string
+	 */
+	public static function setSeq(int $productId, array $hashes)
+	{
+		if (empty($hashes)) {
+			return 'ingredient.empty_list';
+		}
+
+		foreach ($hashes as $i => $hash) {
+			$item = static::getWhereHash($hash, ['ingredient.id'])->where('product_id', $productId)->first();
+			$item->seq = $i + 1;
+			$item->save();
+		}
+
+		return true;
+	}
+
+	/**
+	 * What's the last sequence?
+	 * @param int $productId
+	 * @return integer
+	 */
+	public static function getLastSeq(int $productId)
+	{
+		$item = static::select(['seq'])->orderBy('seq', 'DESC')->where('product_id', $productId)->first();
+		return empty($item->seq) ? 0 : $item->seq;
 	}
 }

@@ -98,6 +98,12 @@ class IngredientController extends Controller
 
 	public function sequence(string $productHash)
 	{
-		dd(request()->all(), $producthash);
+		$foundByHash = Product::findByHash($productHash);
+		if (empty($foundByHash)) {
+			return response()->json(['errors' => ['ingredient.product_does_not_exist']], 400);
+		}
+			
+		return response()->json(['data' => Ingredient::setSeq($foundByHash->id, request()->all()), 'success' => true], 200);
 	}
+	
 }

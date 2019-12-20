@@ -41,7 +41,10 @@ function setLaravelEnv(){
 
 	echo "Fill variables collected from the master '.env'...";
 	sed -i -e "s/DB_USERNAME=FILL_THIS/DB_USERNAME=$DB_USER/g" .env
+  sed -i -e "s/TESTS_DB_USERNAME=FILL_THIS/DB_USERNAME=$DB_USER/g" .env
+
 	sed -i -e "s/DB_PASSWORD=FILL_THIS/DB_PASSWORD=$DB_PW/g" .env  
+	sed -i -e "s/TESTS_DB_PASSWORD=FILL_THIS/DB_PASSWORD=$DB_PW/g" .env  
 
 	docker-compose build --no-cache ruu-laravel5
 

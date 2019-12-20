@@ -8,11 +8,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 {
 	use DatabaseTransactions;
 
-//	function tearDown(): void
-//	{
-//		\DB::statement("TRUNCATE`product`");
-//		\DB::statement("TRUNCATE`ingredient`");
-//	}
+	function tearDown(): void
+	{
+		\DB::statement("TRUNCATE`product`");
+		\DB::statement("TRUNCATE`ingredient`");
+	}
 
 	public function testHash()
 	{		

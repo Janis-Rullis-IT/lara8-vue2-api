@@ -29,7 +29,7 @@ class IngredientController extends Controller
 			return response()->json(['errors' => ['ingredient.product_does_not_exist']], 400);
 		}
 
-		return response()->json(['data' => Ingredient::getList($foundByHash->id), 'success' => true], 200);
+		return response()->json(['data' => Ingredient::getList($foundByHash->id, ['ingredient.title', 'ingredient.hash', 'ingredient.price'], false, true), 'success' => true], 200);
 	}
 
 	/** 	 
@@ -84,9 +84,9 @@ class IngredientController extends Controller
 		if (empty($foundByHash)) {
 			return response()->json(['errors' => ['ingredient.does_not_exist']], 400);
 		} else {
-			
-			$foundByHash->delete();	
-			
+
+			$foundByHash->delete();
+
 			// TODO: Return the changed total price.
 			return response()->json(['data' => [], 'success' => true], 200);
 		}

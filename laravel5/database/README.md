@@ -1,6 +1,6 @@
 # Database strucuture, migrations
 
-## Why migrations are made using RAW SQLs and not used ORM?
+## Why migrations are made using RAW SQLs and not ORM?
 
 ### Guaranteed result - What You See Is What Will Be Imported
 

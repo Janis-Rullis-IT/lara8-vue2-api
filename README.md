@@ -83,7 +83,7 @@ In raw queries it will happen as defined and the refactor migrations will increm
 
 #### References
 
-* [Table Naming Dilemma: Singular vs. Plural Names [closed] (stackoverflow.com](https://stackoverflow.com/a/5841297)
+* [Table Naming Dilemma: Singular vs. Plural Names [closed] (stackoverflow.com) ](https://stackoverflow.com/a/5841297)
 * [Plural vs Singular Table Name (dba.stackexchange.com)](https://dba.stackexchange.com/a/13737)
 * [The table naming dilemma: singular vs. plural (medium.com/@fbnlsr)](https://medium.com/@fbnlsr/the-table-naming-dilemma-singular-vs-plural-dc260d90aaff#1231)
 * [Use singular nouns for database table names (teamten.com)](https://www.teamten.com/lawrence/programming/use-singular-nouns-for-database-table-names.html)
@@ -91,7 +91,7 @@ In raw queries it will happen as defined and the refactor migrations will increm
 
 #### Personal reason
 
-- This practice comes from a practice when an object files, classes, tables needs to be generated from a variable. It is easier to handle a singular word than plural. Example, man -> mans (incorrect but works), men on the other hand is harder to convert to singular without adding a new value.
+- This approach comes from a project where an object files, classes, tables needed to be generated from a variable. It is easier to handle a singular word than plural. Example, man -> mans (incorrect but works), men on the other hand is harder to convert to singular without adding a new value.
 - Mostly table names are shorter. Good when have a lot of relation tables.
 
 ### Why in some Model methods there is used a raw query?

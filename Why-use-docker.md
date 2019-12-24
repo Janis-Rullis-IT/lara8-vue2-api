@@ -11,11 +11,11 @@ Results might differ, in case if the enviroment uses something else. Even the sa
 
 This is **very important for server setups** - developer's enironment must be exact as the servers otherwise the outcome may be destructive.
 
-## - To keep the target system (server or user's computer) unoutouched
+## - To keep the target system (server or user's computer) untouched
 
 and avoid impacting it with this setup.
-Docker an isolated and independent enviroment that won't affect the current OSes setup. It can easily be removed like nothing happend.
+Docker is an isolated and independent enviroment that won't affect the current OSes setup. It can easily be removed like nothing happend.
 
-## - Project can be set without it
+## - A project can be set without it
 
 Don't want to setup Docker? Good, You still can set this project without it.

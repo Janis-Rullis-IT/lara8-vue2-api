@@ -10,7 +10,7 @@ Less space for side-effects.
 
 ### Easier to migrate the project
 
-if the project is moved to other language, framework or version.
+if the project is moved to other language, framework or version. [FAQ/Why wasn't used a specifc framework method?](https://github.com/janis-rullis/code-ruu/blob/b9681c55a6ef2391206762621139cb3d70c10855/laravel5/README.md#faq)
 
 ### What's wrong with using ORM or self defined PHP methods?
 

@@ -13,4 +13,4 @@ vendor/bin/phpunit tests/
 
 #### Easier to migrate the project
 
-By using less framework specific methods and more language-wide features makes a migration to other language, framework or version, less complex
+By using less framework specific methods and more language-wide features makes a migration to other language, framework or version, less complex.

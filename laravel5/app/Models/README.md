@@ -6,4 +6,4 @@ All the logic rests here in one place so the processed data should be returned t
 
 ## Why static methods are used and not [Faceades](ttps://laravel.com/docs/5.7/facades)?
 
-See [FAQ](https://github.com/janis-rullis/code-ruu/blob/master/laravel5/README.md#FAQ)
+See [FAQ/Why wasn't used a specifc framework method?](https://github.com/janis-rullis/code-ruu/blob/b9681c55a6ef2391206762621139cb3d70c10855/laravel5/README.md#faq)

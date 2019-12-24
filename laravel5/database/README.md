@@ -25,7 +25,6 @@ The migrations needs to be made incrementaly - step by step.
 It is easier to copy RAW queries in specific steps, than trying to convert the code to the specific SQL.
 
 In raw queries it will happen as defined and the refactor migrations will incrementaly updated databases.
-<<<<<<< HEAD
 
 ## Why table names are called in a singular and not plurar manner?
 
@@ -39,5 +38,3 @@ In raw queries it will happen as defined and the refactor migrations will increm
 
 - This practice comes from a practice when an object files, classes, tables needs to be generated from a variable. It is easier to handle a singular word than plural. Example, man -> mans (incorrect but works), men on the other hand is harder to convert to singular without adding a new value.
 - Mostly table names are shorter. Good when have a lot of relation tables.
-=======
->>>>>>> e7efa307c6692fe60265aafe91d81bfc1ee4c14e

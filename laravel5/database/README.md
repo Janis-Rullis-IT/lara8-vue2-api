@@ -1,6 +1,8 @@
 # Database strucuture, migrations
 
-## Why migrations are made using RAW SQLs and not ORM?
+## Why migrations are made using RAW SQLs and not framework tools?
+
+> like schemor builders, seeders, ORM, or self-defined logic inside a Model.
 
 ### Guaranteed result - What You See Is What Will Be Imported
 

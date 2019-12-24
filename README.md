@@ -1,6 +1,6 @@
 # code-ruu
 
-Working examples of various technologies.
+Working examples of various technologies and practices - JSON API, Vue2, Laravel5, Phoenix/Elixir, Webpack.
 
 ## Setup
 
@@ -37,7 +37,7 @@ chmod a+x setup.sh
 
 ## FAQ
 
-### Why wasn't used a specifc framework method?
+### Why wasn't used a specific framework method?
 
 * [Before starting a project / feature avoid conflicts in the team by discussing and agreeing on standards.](Project-and-company-wide-practices.md)
 
@@ -75,7 +75,7 @@ It is easier to copy RAW queries in specific steps, than trying to convert the c
 
 In raw queries it will happen as defined and the refactor migrations will incrementaly updated databases.
 
-### Why table names are called in a singular and not plurar manner?
+### Why table names are called in a singular and not plural manner?
 
 > Up to you. Just be consistent though.
 

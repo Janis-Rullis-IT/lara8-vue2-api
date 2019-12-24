@@ -145,7 +145,7 @@ export default {
             this.ingredients.push(response.data.data);
 
             // Total price: total collected from API - maybe they don't have the ingredient or a tax is added or a discount.
-            // Also the logic should be in one common place - in this specifc case MySQL. Various APIs can use the same data and get the same result.
+            // Also the logic should be in one common place - in this specific case MySQL. Various APIs can use the same data and get the same result.
             // But if needed the price logic can be updated after tbe data/price has been collected like here or in the API that called the DB.
             this.product.price = this.intToDec(response.data.data.product_price);
           },

@@ -16,7 +16,7 @@ Consists of [layouts](#layouts) and [components](#components).
 
 ### `router`
 
-Tells which [pages](#pages) to load when a specifc URL is called.
+Tells which [pages](#pages) to load when a specific URL is called.
 
 ### `app.js`
 

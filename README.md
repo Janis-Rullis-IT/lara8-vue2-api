@@ -45,7 +45,7 @@ chmod a+x setup.sh
 
 By using less framework specific methods and more language-wide features makes a migration to other language, framework or version, less complex.
 
-### Why migrations are made using RAW SQLs and not framework tools?
+### Why migrations are made using raw SQLs and not framework tools?
 
 > like schemor builders, seeders, ORM, or self-defined logic inside a Model.
 
@@ -93,3 +93,42 @@ In raw queries it will happen as defined and the refactor migrations will increm
 
 - This practice comes from a practice when an object files, classes, tables needs to be generated from a variable. It is easier to handle a singular word than plural. Example, man -> mans (incorrect but works), men on the other hand is harder to convert to singular without adding a new value.
 - Mostly table names are shorter. Good when have a lot of relation tables.
+
+### Why in some Model methods there is used a raw query?
+
+#### Use case #1 `Product::updatePrice(int $productId)` - faster and more reliable
+
+```php
+public static function updatePrice(int $productId)
+	{
+		return \DB::statement("
+			UPDATE `product`
+			SET `price` = (SELECT SUM(price) FROM ingredient WHERE `product_id` = ? AND deleted_at IS NULL)
+			WHERE `id` = ?
+        ", [$productId, $productId]);
+	}
+```
+
+This query's execution is way faster and stable when called in SQL rather than in PHP (collect items, calculate and set).
+
+#### Use case #2 `updateSeq(int $productId)` - faster and more reliable
+
+```php
+	public static function updateSeq(int $productId)
+	{
+		return \DB::statement("
+			UPDATE `ingredient`
+			SET `seq` = (@i := @i+1)
+			WHERE `product_id` = ?
+			AND `deleted_at` IS NULL
+			ORDER BY `seq` ASC
+			(SELECT @i := 1)
+        ", [$productId]);
+	}
+```
+
+This query's execution is way faster and stable when called in SQL rather than in PHP (collect items, calculate and set).
+
+#### Use case #2 - not in this project - limitations, control and easier to maintain
+
+Sometimes the abstraction just can't exactly implement the desired outcome which could lead to silly workarounds and make the code less maintainable.

@@ -17,7 +17,6 @@ Working examples of various technologies and practices - Docker, JSON API, Vue2,
 ### `setup.sh`
 
 ```shell
-chmod a+x setup.sh
 ./setup.sh
 ```
 

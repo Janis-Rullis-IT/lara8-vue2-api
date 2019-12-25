@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS `ruu`;
+CREATE DATABASE IF NOT EXISTS `ruu_testing`;
+GRANT ALL PRIVILEGES ON `ruu`.* TO 'ruu-user'@'%';
+GRANT ALL PRIVILEGES ON `ruu_testing`.* TO 'ruu-user'@'%';
+FLUSH  PRIVILEGES;

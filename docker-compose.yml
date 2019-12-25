@@ -37,11 +37,14 @@ services:
             - type: bind
               source: ./db/mysql
               target: /var/lib/mysql
+            - type: bind
+              source: ./db/docker-entrypoint-initdb.d
+              target: /docker-entrypoint-initdb.d
         environment:
             TZ: Europe/Riga
             LANG: en_US.UTF-8
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-            MYSQL_USER: $MYSQL_USER
+            MYSQL_USER: ruu-user
             MYSQL_PASSWORD: $MYSQL_PASSWORD
             INIT_TOKUDB: 1
             INIT_ROCKSDB: 0
@@ -57,7 +60,7 @@ services:
         - ruu-mysql
         environment:
             MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-            MYSQL_USER: $MYSQL_USER
+            MYSQL_USER: ruu-user
             MYSQL_PASSWORD: $MYSQL_PASSWORD
             PMA_HOST: ruu-mysql  
             PMA_PORT: 3306

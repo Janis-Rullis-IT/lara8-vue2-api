@@ -13,10 +13,12 @@ function init(){
 function stopDocker(){
 	echo "Stop any running container from this project";
 	docker-compose down
-	echo "Remove any dangling part."
-	echo y | docker network prune
-	echo y | docker image prune
-	echo y | docker volume prune
+
+# TODO: Wrap this into a testing condition. 
+#	echo "Remove any dangling part."
+#	echo y | docker network prune
+#	echo y | docker image prune
+#	echo y | docker volume prune
 }
 
 function initDb(){

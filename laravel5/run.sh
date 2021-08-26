@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -e
-service php7.2-fpm start
+service php7.4-fpm start
 composer install
 chmod a+w storage -R
 

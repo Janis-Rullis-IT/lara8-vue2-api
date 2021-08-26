@@ -1,4 +1,5 @@
-FROM ubuntu:18.04
+# Ubu Taken https://github.com/Janis-Rullis-IT/pr1-symfony5-api
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -10,24 +11,12 @@ RUN mkdir /var/www
 RUN apt-get clean && apt-get -y update && apt-get install -y locales && locale-gen en_US.UTF-8
 RUN apt-get install --yes build-essential inotify-tools cron nano mc htop curl nginx iputils-ping
 
-# Install php 7.2    
-RUN apt-get update && apt-get install -yq --no-install-recommends \          
-    php7.2-cli \
-    php7.2-json \
-    php7.2-curl \
-    php7.2-fpm \
-    php7.2-gd \
-    php7.2-ldap \
-    php7.2-mbstring \
-    php7.2-mysql \
-    php7.2-soap \
-    php7.2-sqlite3 \
-    php7.2-xml \
-    php7.2-zip \
-    php7.2-intl \    
-    php7.2-bcmath \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-    
+RUN apt install software-properties-common -y
+RUN add-apt-repository ppa:ondrej/php -y
+RUN apt update -y
+
+RUN apt install php7.4-fpm -y
+RUN apt install php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring php7.4-opcache php7.4-soap php7.4-zip php7.4-intl -y
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -43,4 +32,7 @@ RUN chmod a+rwX /var/www -R
 WORKDIR /var/www
 
 EXPOSE 80
-CMD ["./run.sh"]
+#CMD ["./run.sh"]
+# #14 Tempororaliy replace `CMD ["./run.sh"]` with this to eep the container alive https://github.com/Janis-Rullis-IT/dev/blob/master/Tools/Docker/Keep-container-alive.md#fix
+# #14 Necessary, otherise the container will shutdown due composer's error in the middle of upgrade.
+CMD tail -f /dev/null

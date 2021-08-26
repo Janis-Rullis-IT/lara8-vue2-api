@@ -29,7 +29,8 @@ services:
                 ipv4_address: 172.60.2.11
     ruu-mysql:
         container_name: ruu-mysql
-        image: 'mariadb:latest'
+        # #4 Fix `No address associated with hostname` and avoid unexpected updates when using `latest`.
+        image: 'mariadb:10.6.4-focal'
         restart: unless-stopped
         ports:
             - '3306:3306'

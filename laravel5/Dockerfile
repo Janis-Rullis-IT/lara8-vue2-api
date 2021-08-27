@@ -32,7 +32,7 @@ RUN chmod a+rwX /var/www -R
 WORKDIR /var/www
 
 EXPOSE 80
-#CMD ["./run.sh"]
+CMD ["./run.sh"]
 # #14 Tempororaliy replace `CMD ["./run.sh"]` with this to eep the container alive https://github.com/Janis-Rullis-IT/dev/blob/master/Tools/Docker/Keep-container-alive.md#fix
 # #14 Necessary, otherise the container will shutdown due composer's error in the middle of upgrade.
-CMD tail -f /dev/null
+# CMD tail -f /dev/null

@@ -33,7 +33,7 @@ services:
         image: 'mariadb:10.6.4-focal'
         restart: unless-stopped
         ports:
-            - '3306:3306'
+          - '3346:3306'
         volumes:
             - type: bind
               source: ./db/mysql

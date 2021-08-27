@@ -1,9 +1,9 @@
-# ruu-laravel5
+# ruu-laravel8
 
 ## Launch PhpUnit tests
 
 ```shell
-docker exec -it ruu-laravel5 bash
+docker exec -it ruu-laravel8 bash
 vendor/bin/phpunit tests/
 ```
 

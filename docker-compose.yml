@@ -12,10 +12,10 @@ services:
         networks:
             ruu-net:
                 ipv4_address: 172.60.2.10
-    ruu-laravel5:
-        container_name: ruu-laravel5
+    ruu-laravel8:
+        container_name: ruu-laravel8
         build:
-            context: ./laravel5
+            context: ./laravel8
             dockerfile: Dockerfile
         restart: unless-stopped
         depends_on:
@@ -23,7 +23,7 @@ services:
         environment:            
             VIRTUAL_HOST: api.ruu.local
         volumes:
-            - './laravel5:/var/www:rw'
+            - './laravel8:/var/www:rw'
         networks:
             ruu-net:
                 ipv4_address: 172.60.2.11

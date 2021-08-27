@@ -1,6 +1,6 @@
 # code-ruu
 
-Working examples of various technologies and practices - Docker, JSON API, Vue2, Laravel5, Phoenix/Elixir, Webpack.
+Working examples of various technologies and practices - Docker, JSON API, Vue2, laravel8, Phoenix/Elixir, Webpack.
 
 ## Setup
 

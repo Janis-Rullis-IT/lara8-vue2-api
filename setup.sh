@@ -33,9 +33,9 @@ function readEnvVariables(){
 }
 
 function setLaravelEnv(){
-	echo "Setting up the 'ruu-laravel5' container."
-	echo "Go into 'laravel5' direcotry...";
-	cd laravel5
+	echo "Setting up the 'ruu-laravel8' container."
+	echo "Go into 'laravel8' direcotry...";
+	cd laravel8
 	echo "Copying '.env.example' to '.env'...";
 	cp .env.example .env
 
@@ -44,10 +44,10 @@ function setLaravelEnv(){
 	sed -i -e "s/DB_PASSWORD=FILL_THIS/DB_PASSWORD=$DB_PW/g" .env  
 	sed -i -e "s/TESTS_DB_PASSWORD=FILL_THIS/DB_PASSWORD=$DB_PW/g" .env  
 
-	docker-compose build --no-cache ruu-laravel5
+	docker-compose build --no-cache ruu-laravel8
 
 	echo "Generating the 'APP_KEY'...";
-	docker-compose run --no-deps ruu-laravel5 bash -c "php artisan key:generate"
+	docker-compose run --no-deps ruu-laravel8 bash -c "php artisan key:generate"
 
   echo "Setting up the '.env.testing'...";
   cp .env .env.testing

@@ -1,4 +1,4 @@
 .env
 db/mysql/*
 !db/mysql/.gitkeep
-/laravel5/nbproject/*
+/laravel8/nbproject/*

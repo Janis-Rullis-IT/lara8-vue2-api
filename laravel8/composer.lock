@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "21833ac4683453a518b94ff4cae3cee5",
+    "content-hash": "acfee516dea587439e6213eb03feb359",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -361,23 +361,23 @@
         },
         {
             "name": "dingo/blueprint",
-            "version": "v0.4.2",
+            "version": "v0.4.3-rc1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dingo/blueprint.git",
-                "reference": "c330027bc85ef76639b27a900f511ce4270e28bf"
+                "reference": "e3a8f19ae10716670079c3c162540756dbd20a88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dingo/blueprint/zipball/c330027bc85ef76639b27a900f511ce4270e28bf",
-                "reference": "c330027bc85ef76639b27a900f511ce4270e28bf",
+                "url": "https://api.github.com/repos/dingo/blueprint/zipball/e3a8f19ae10716670079c3c162540756dbd20a88",
+                "reference": "e3a8f19ae10716670079c3c162540756dbd20a88",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "~1.2",
                 "illuminate/filesystem": "^7.0|^8.0",
                 "illuminate/support": "^7.0|^8.0",
-                "php": "^7.2.5",
+                "php": "^7.2.5|^8.0",
                 "phpdocumentor/reflection-docblock": "^3.1 || ^4.1 || ^5"
             },
             "require-dev": {
@@ -415,9 +415,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dingo/blueprint/issues",
-                "source": "https://github.com/dingo/blueprint/tree/v0.4.2"
+                "source": "https://github.com/dingo/blueprint/tree/v0.4.3-rc1"
             },
-            "time": "2020-09-13T12:32:17+00:00"
+            "time": "2021-04-30T11:20:38+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -2253,20 +2253,20 @@
         },
         {
             "name": "psr/cache",
-            "version": "1.0.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/cache.git",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+                "reference": "aa5030cfa5405eccfdcb1083ce040c2cb8d253bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/aa5030cfa5405eccfdcb1083ce040c2cb8d253bf",
+                "reference": "aa5030cfa5405eccfdcb1083ce040c2cb8d253bf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=8.0.0"
             },
             "type": "library",
             "extra": {
@@ -2286,7 +2286,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for caching libraries",
@@ -2296,9 +2296,9 @@
                 "psr-6"
             ],
             "support": {
-                "source": "https://github.com/php-fig/cache/tree/master"
+                "source": "https://github.com/php-fig/cache/tree/3.0.0"
             },
-            "time": "2016-08-06T20:24:11+00:00"
+            "time": "2021-02-03T23:26:27+00:00"
         },
         {
             "name": "psr/container",
@@ -7094,7 +7094,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.4.0"
+        "php": "^8.0.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"

@@ -1,4 +1,7 @@
-FROM ubuntu:18.04
+# Ubu Taken https://github.com/Janis-Rullis-IT/pr1-symfony5-api
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # create source directory
 RUN rm -rf /var/www
@@ -9,7 +12,7 @@ RUN apt-get clean && apt-get -y update && apt-get install -y locales && locale-g
 RUN apt-get install --yes build-essential inotify-tools cron nano mc htop curl nginx iputils-ping
 
 # Install node
-RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
+RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install -y nodejs
 

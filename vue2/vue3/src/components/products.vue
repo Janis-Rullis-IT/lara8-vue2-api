@@ -65,8 +65,7 @@ export default defineComponent({
            this.loading = false;
            console.log(this.products)
       })
-      .catch(err => console.log(err.message)) //this.showError(response.data.errors);
-      alert('sh')
+      .catch(err => this.showError(err.message))
     },
     // TODO: Move to common lib.
     clearAlerts: function(): void {

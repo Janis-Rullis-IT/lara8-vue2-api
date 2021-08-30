@@ -49,7 +49,7 @@
                 ghost-class="ghost"
                 @start="dragging = true"
                 @end="pushSequence()"
-              >
+              > -->
                 <div
                   class="list-group-item"
                   v-for="ingredient in ingredients"
@@ -58,7 +58,7 @@
                   {{ ingredient.title }} {{ intToDec(ingredient.price) }}
                   <button type="button" @click="remove(ingredient)">Delete</button>
                 </div>
-              </draggable> -->
+              <!-- </draggable> -->
             </div>
           </div>
           <div class="row text">
@@ -80,8 +80,12 @@ interface ProductResponse {
     success: boolean;
 }
 
-interface IngredientResponse {
+interface IngredientsResponse {
     data: Array<Ingredient>;
+    success: boolean;
+}
+interface IngredientResponse {
+    data: Ingredient;
     success: boolean;
 }
 
@@ -135,7 +139,7 @@ export default defineComponent({
         return fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients");
       })
       .then(res => res.json())
-      .then((data: IngredientResponse) => { 
+      .then((data: IngredientsResponse) => { 
             this.loading = false;
             this.ingredients = data.data;
       })
@@ -156,18 +160,20 @@ export default defineComponent({
         return false;
       }
 
-        fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients", {method: 'POST', body: JSON.stringify( {
-            title: this.title, price: 100 * parseInt(this.price)
+        fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients", {
+            headers: {'Content-Type': 'application/json'},
+            method: 'POST', body: JSON.stringify( {
+            title: this.title, price: 100 * parseFloat(this.price)
         })})
         .then(res => res.json())
-        .then((data: Ingredient) => { 
+        .then((data: IngredientResponse) => { 
             this.loading = false;
-            this.ingredients.push(data);
+            this.ingredients.push(data.data);
 
             // Total price: total collected from API - maybe they don't have the ingredient or a tax is added or a discount.
             // Also the logic should be in one common place - in this specific case MySQL. Various APIs can use the same data and get the same result.
             // But if needed the price logic can be updated after tbe data/price has been collected like here or in the API that called the DB.
-            this.product.price = this.intToDec(data.product_price);
+            this.product.price = this.intToDec(data.data.product_price);
         })
         .catch((err) => {
             this.loading = false;
@@ -181,10 +187,10 @@ export default defineComponent({
 
         fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients/" + item.hash, {method: 'DELETE'})
         .then(res => res.json())
-        .then((data: Ingredient) => { 
+        .then((data: IngredientResponse) => { 
             this.loading = false;   
             this.ingredients.splice(this.ingredients.indexOf(item), 1);
-            this.product.price = this.intToDec(data.product_price);
+            this.product.price = this.intToDec(data.data.product_price);
         })
         .catch((err) => {
             this.loading = false;
@@ -204,7 +210,7 @@ export default defineComponent({
           sequence.push(this.ingredients[i].hash);
         }
 
-        return fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients/sequence", {method: 'PUT', body: JSON.stringify(sequence)});
+        return fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients/sequence", {headers: {'Content-Type': 'application/json'}, method: 'PUT', body: JSON.stringify(sequence)});
       }
     },
     intToDec(val: number): number{

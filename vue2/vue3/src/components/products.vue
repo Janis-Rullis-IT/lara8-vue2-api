@@ -63,9 +63,8 @@ export default defineComponent({
       .then((data: ProductResponse) => {
            this.products = data.data;
            this.loading = false;
-           console.log(this.products)
       })
-      .catch(err => this.showError(err.message))
+      .catch(err => this.showError(err.errors))
     },
     // TODO: Move to common lib.
     clearAlerts: function(): void {

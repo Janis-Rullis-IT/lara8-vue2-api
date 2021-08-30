@@ -1,7 +1,7 @@
 <template>
-	<default-layout>
+	<!-- <default-layout> -->
 		<products></products>
-	</default-layout>
+	<!-- </default-layout> -->
 </template>
 
 <script lang="ts">

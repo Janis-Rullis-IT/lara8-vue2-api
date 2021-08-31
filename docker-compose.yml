@@ -1,14 +1,14 @@
 version: '3.6'
 services:
-    ruu-vue2:
-        container_name: ruu-vue2
+    ruu-vue3:
+        container_name: ruu-vue3
         build:
-            context: ./vue2
+            context: ./vue3
             dockerfile: Dockerfile
         environment:
             VIRTUAL_HOST: ruu.local
         volumes:
-            - './vue2:/var/www:rw'
+            - './vue3:/var/www:rw'
         networks:
             ruu-net:
                 ipv4_address: 172.60.2.10

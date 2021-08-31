@@ -216,7 +216,7 @@ class Ingredient extends Model
 	 */
 	public static function getSlug(string $str)
 	{
-		return str_slug($str);
+		return \Illuminate\Support\Str::slug($str);
 	}
 
 	/**

@@ -1,6 +1,0 @@
-/node_modules
-/dist
-/public/ui/js/dist/*
-!/public/ui/js/dist/README.md
-/.vscode
-/nbproject/*

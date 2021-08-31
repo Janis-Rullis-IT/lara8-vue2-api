@@ -42,14 +42,14 @@
             <button type="button" @click="addNew()">Add</button>
 
             <div class="col-sm-12 list-groupe">
-              <draggable
+              <!-- <draggable
                 :list="ingredients"
                 :disabled="!enabled"
                 class="list-group"
                 ghost-class="ghost"
                 @start="dragging = true"
                 @end="pushSequence()"
-              >
+              > -->
                 <div
                   class="list-group-item"
                   v-for="ingredient in ingredients"
@@ -58,7 +58,7 @@
                   {{ ingredient.title }} {{ intToDec(ingredient.price) }}
                   <button type="button" @click="remove(ingredient)">Delete</button>
                 </div>
-              </draggable>
+              <!-- </draggable> -->
             </div>
           </div>
           <div class="row text">
@@ -71,21 +71,51 @@
     </div>
   </div>
 </template>
-<script>
-// https://github.com/SortableJS/Vue.Draggable/blob/master/example/components/simple.vue
-import draggable from "vuedraggable";
-export default {
-  components: {
-    draggable
-  },
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+interface ProductResponse {
+    data: Product;
+    success: boolean;
+}
+
+interface IngredientsResponse {
+    data: Array<Ingredient>;
+    success: boolean;
+}
+interface IngredientResponse {
+    data: Ingredient;
+    success: boolean;
+}
+
+interface Product {
+    hash: string;
+    price: number;
+    slug: string;
+    title: string;
+    type: string;
+}
+
+interface Ingredient {
+    hash: string;
+    price: number;
+    product_price: number;
+    slug: string;
+    title: string;
+    type: string;
+}
+
+export default defineComponent({
+  name: 'product',
   data() {
     return {
       loading: true,
-      alerts: { success: "", errors: [] },
-      slug: this.$route.params.slug,
-      type: this.$route.params.type,
-      product: {},
-      ingredients: [],
+      alerts: { success: "", errors: [] as Array<string> },
+      slug: this.$route.params.slug as string,
+      type: this.$route.params.type as string,
+      product: {} as Product,
+      ingredients: [] as Array<Product>,
       dragging: false,
       enabled: true,
       title: "",
@@ -100,83 +130,77 @@ export default {
       this.clearAlerts();
       this.loading = true;
 
-      this.$http.get("products/" + this.type + "/" + this.slug).then(
-        function(response) {
-          this.product = response.data.data;
+      fetch(`http://api.ruu.local/products/${this.type}/${this.slug}`)
+      .then(res => res.json())
+      .then((data: ProductResponse) => {
+           this.product = data.data;
           // TODO: Later return dec_ field for this from API.
           this.product.price = this.intToDec(this.product.price);
-
-          this.$http.get("products/" + this.product.hash + "/ingredients").then(
-            function(response) {
-              this.loading = false;
-              this.ingredients = response.data.data;
-            },
-            function() {
-              this.loading = false;
-              this.showError(response.data.errors);
-            }
-          );
-        },
-        function() {
-          this.showError(response.data.errors);
-        }
-      );
+        return fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients");
+      })
+      .then(res => res.json())
+      .then((data: IngredientsResponse) => { 
+            this.loading = false;
+            this.ingredients = data.data;
+      })
+      .catch((err) => {
+          this.loading = false;
+          console.log(err);
+          this.showError(err.errors)
+      })
     },
     addNew() {
       this.clearAlerts();
       this.loading = true;
 
       this.title = this.title.trim();
-      this.price = this.price;
 
       if (this.title.length < 1 || this.price.length < 1) {
         this.showError(["Sorry, no empty values."]);
         return false;
       }
 
-      this.$http
-        .post("products/" + this.product.hash + "/ingredients", {
-          title: this.title,
-          price: this.price * 100
-        })
-        .then(
-          function onSuccess(response) {
+        fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients", {
+            headers: {'Content-Type': 'application/json'},
+            method: 'POST', body: JSON.stringify( {
+            title: this.title, price: 100 * parseFloat(this.price)
+        })})
+        .then(res => res.json())
+        .then((data: IngredientResponse) => { 
             this.loading = false;
-            this.ingredients.push(response.data.data);
+            this.ingredients.push(data.data);
 
             // Total price: total collected from API - maybe they don't have the ingredient or a tax is added or a discount.
             // Also the logic should be in one common place - in this specific case MySQL. Various APIs can use the same data and get the same result.
             // But if needed the price logic can be updated after tbe data/price has been collected like here or in the API that called the DB.
-            this.product.price = this.intToDec(response.data.data.product_price);
-          },
-          function onFail(response) {
+            this.product.price = this.intToDec(data.data.product_price);
+        })
+        .catch((err) => {
             this.loading = false;
-            this.showError(response.data.errors);
-          }
-        );
+            console.log(err);
+            this.showError(err.errors)
+        })
     },
-    remove(item) {
+    remove(item: Ingredient) {
       if (confirm("Are you sure?")) {
         this.clearAlerts();
 
-        this.$http
-          .delete("products/" + this.product.hash + "/ingredients/" + item.hash)
-          .then(
-            function onSuccess(response) {
-              this.loading = false;   
-              this.ingredients.splice(this.ingredients.indexOf(item), 1);
-              this.product.price = this.intToDec(response.data.data.product_price);
-            },
-            function onFail(response) {
-              this.loading = false;
-              this.showError(response.data.errors);
-            }
-          );
+        fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients/" + item.hash, {method: 'DELETE'})
+        .then(res => res.json())
+        .then((data: IngredientResponse) => { 
+            this.loading = false;   
+            this.ingredients.splice(this.ingredients.indexOf(item), 1);
+            this.product.price = this.intToDec(data.data.product_price);
+        })
+        .catch((err) => {
+            this.loading = false;
+            console.log(err);
+            this.showError(err.errors)
+        })
       }
     },
     pushSequence: function() {
       var sequence = [];
-      var index = 0;
       var icnt = this.ingredients.length;
 
       if (icnt > 0) {
@@ -186,16 +210,12 @@ export default {
           sequence.push(this.ingredients[i].hash);
         }
 
-        this.$http
-          .put(
-            "products/" + this.product.hash + "/ingredients/sequence",
-            sequence
-          )
-          .then(response => {}, response => {});
+        return fetch("http://api.ruu.local/products/" + this.product.hash + "/ingredients/sequence", {headers: {'Content-Type': 'application/json'}, method: 'PUT', body: JSON.stringify(sequence)});
       }
     },
-    intToDec(val){
-      return parseFloat(val / 100).toFixed(2);
+    intToDec(val: number): number{
+      let str:string = (val / 100).toFixed(2);
+      return parseFloat(str);
     },
     // TODO: Move to common lib.
     clearAlerts: function() {
@@ -211,20 +231,16 @@ export default {
         this.loading = false;
       }
     },
-    // TODO: Plug translations.
-    getTranslatedMessage: function(messageKey) {
-      return this.doesTranslationExist(messageKey)
-        ? window.translations[messageKey]
-        : messageKey;
+    getTranslatedMessage: function(messageKey: string): string {
+        return messageKey;
+        // TODO: Plug translations.
+      //return this.doesTranslationExist(messageKey) ? window.translations[messageKey] : messageKey;
     },
-    doesTranslationExist(messageKey) {
-      return (
-        messageKey &&
-        typeof window.translations != "undefined" &&
-        typeof window.translations[messageKey] != "undefined" &&
-        window.translations[messageKey] != null
-      );
-    }
+    // doesTranslationExist(messageKey) {
+    //   return (
+    //     messageKey && typeof window.translations != "undefined" &&  typeof window.translations[messageKey] != "undefined" && window.translations[messageKey] != null
+    //   );
+    // }
   }
-};
+})
 </script> 

@@ -1,12 +1,24 @@
-# ruu-vue2
+# vue3
 
-## Launch webpack watcher
-
-> If You want.
-
-```shell
-docker exec -it ruu-vue2 bash
-npm run dev
+## Project setup
+```
+npm install
 ```
 
-## [FAQ](https://github.com/janis-rullis/code-ruu/blob/master/README.md#faq)
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
